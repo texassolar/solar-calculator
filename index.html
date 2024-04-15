@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Lease Calculator</title>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function(){
+            // Initialize EmailJS with your user ID from EmailJS account
+            emailjs.init("Q-qgbWJrj1d1IiLRM"); // Replace 'your_user_id' with your actual User ID from EmailJS
+        })();
+    </script>
+    <style>
+        body {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        form {
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        input, button {
+            height: 40px;
+            padding: 0 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <form id="leaseCalculator" onsubmit="return validateForm()">
+        <h1>Solar Lease Calculator</h1>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+
+        <label for="kilowatts">Yearly Kilowatt Usage:</label>
+        <input type="number" id="kilowatts" name="kilowatts" required placeholder="Yearly Kilowatt Usage">
+
+        <button type="submit">Calculate</button>
+        <p id="result"></p>
+    </form>
+
+    <script>
+        function validateForm() {
+            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value;
+            var kilowatts = document.getElementById('kilowatts').value;
+            var result = kilowatts * 0.012;
+
+            if (!email || !phone || !kilowatts) {
+                alert('All fields are required.');
+                return false;
+            }
+
+            document.getElementById('result').innerText = `Your Monthly Solar Lease Cost is Estimated at: $${result.toFixed(2)}`;
+
+            // Send the email using EmailJS
+            emailjs.send("service_i5umw5m", "template_hp3ed0z", {
+                to_email: "david@accurateroofsystems.com",
+                from_name: "Solar Calculator Website",
+                email: email,
+                phone: phone,
+                kilowatts: kilowatts,
+                result: `$${result.toFixed(2)}`
+            }).then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                alert('Email sent successfully!');
+            }, function(error) {
+                console.log('FAILED...', error);
+                alert('Failed to send email.');
+            });
+
+            return false; // Prevent form from submitting and refreshing the page
+        }
+    </script>
+</body>
+</html>
